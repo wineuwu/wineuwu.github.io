@@ -1,0 +1,725 @@
+<title>前端工程實作紀錄</title>
+<style>
+  :root {
+    --ink: #1a1d24;
+    --ink-soft: #4a5160;
+    --ink-faint: #767d8c;
+    --line: #dfe3ea;
+    --line-soft: #eef1f5;
+    --paper: #ffffff;
+    --tint: #f6f8fb;
+    --accent: #2f5d8c;
+    --accent-soft: #e8f0f8;
+    --warn: #8c5a2f;
+    --warn-soft: #f8f1e8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--tint);
+    color: var(--ink);
+    font-family: "Helvetica Neue", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding-block: 56px;
+    padding-inline: 56px;
+  }
+
+  /* ---------- 頁首 ---------- */
+  header.masthead {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 38px;
+  }
+
+  h1 {
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    margin: 0 0 5px;
+    font-weight: 700;
+  }
+
+  .masthead .sub {
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  /* ---------- 區塊 ---------- */
+  section.block {
+    margin-bottom: 46px;
+    break-inside: avoid;
+  }
+
+  .block-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+  }
+
+  .num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-size: 18.5px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .block-head .tag {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  h3 {
+    font-size: 13.5px;
+    margin: 24px 0 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  h3:first-of-type { margin-top: 0; }
+
+  p { margin: 0 0 13px; }
+
+  .lead {
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  /* ---------- 問題／解法對照 ---------- */
+  .ps {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .ps > div {
+    flex: 1 1 240px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 13px 15px;
+    background: var(--tint);
+  }
+
+  .ps .h {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 7px;
+  }
+
+  .ps .solve {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .ps .solve .h { color: var(--accent); }
+
+  .ps ul {
+    margin: 0;
+    padding-left: 16px;
+  }
+
+  .ps li {
+    font-size: 12.5px;
+    line-height: 1.7;
+    margin-bottom: 5px;
+  }
+
+  .ps li:last-child { margin-bottom: 0; }
+
+  /* ---------- 流程圖 ---------- */
+  .flow {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 17px;
+    background: var(--tint);
+    margin-bottom: 20px;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: stretch;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  .node {
+    flex: 1 1 0;
+    min-width: 100px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 9px;
+    text-align: center;
+  }
+
+  .node.strong {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .node.flag {
+    border-color: var(--warn);
+    background: var(--warn-soft);
+  }
+
+  .node .t {
+    font-size: 12.5px;
+    font-weight: 700;
+    display: block;
+    line-height: 1.5;
+  }
+
+  .node .d {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    display: block;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  .node .who {
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .node.flag .who { color: var(--warn); }
+
+  .arrow {
+    align-self: center;
+    color: var(--ink-faint);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .flow-note {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin: 12px 0 0;
+    text-align: center;
+  }
+
+  /* ---------- 縱向流程圖 ---------- */
+  .vflow {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 20px 18px;
+    background: var(--tint);
+    margin-bottom: 18px;
+  }
+
+  .stage {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .stage + .stage { margin-top: 0; }
+
+  .rail {
+    flex: 0 0 62px;
+    text-align: right;
+    padding-top: 9px;
+  }
+
+  .rail .actor {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    line-height: 1.4;
+    display: block;
+  }
+
+  .rail .actor.ext { color: var(--ink-faint); }
+  .rail .actor.usr { color: var(--warn); }
+
+  .box {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 5px 5px 0;
+    padding: 9px 13px;
+  }
+
+  .box.outside {
+    border-left-color: var(--ink-faint);
+    background: var(--line-soft);
+  }
+
+  .box.user {
+    border-left-color: var(--warn);
+    background: var(--warn-soft);
+  }
+
+  .box .bt {
+    font-size: 12.5px;
+    font-weight: 700;
+    display: block;
+    line-height: 1.6;
+  }
+
+  .box .bd {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    display: block;
+    line-height: 1.65;
+  }
+
+  .vlink {
+    margin-left: 74px;
+    color: var(--ink-faint);
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 2px 0;
+  }
+
+  .vlink b {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11px;
+    margin-left: 4px;
+  }
+
+  .branch {
+    margin-left: 74px;
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+
+  .branch > div {
+    flex: 1 1 200px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 8px 11px;
+    background: var(--paper);
+  }
+
+  .branch .cond {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .branch .no .cond { color: var(--warn); }
+
+  .branch .txt {
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    display: block;
+  }
+
+  /* ---------- 分層 ---------- */
+  .layers { margin-bottom: 18px; }
+
+  .layer {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--line);
+    padding: 10px 14px;
+    margin-bottom: 5px;
+    background: var(--paper);
+    border-radius: 0 5px 5px 0;
+  }
+
+  .layer.mine {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .layer .lt {
+    font-size: 12.5px;
+    font-weight: 700;
+    display: block;
+  }
+
+  .layer .ld {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    display: block;
+    line-height: 1.6;
+  }
+
+  .layer .own {
+    float: right;
+    font-size: 10.5px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- 決策卡 ---------- */
+  .decision {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 13px 16px;
+    margin-bottom: 9px;
+    background: var(--paper);
+    break-inside: avoid;
+  }
+
+  .decision .dq {
+    font-size: 12.5px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    color: var(--accent);
+  }
+
+  .decision p { margin: 0; font-size: 13px; line-height: 1.75; }
+
+  /* ---------- 標註 ---------- */
+  .callout {
+    border-left: 3px solid var(--warn);
+    background: var(--warn-soft);
+    padding: 11px 15px;
+    border-radius: 0 5px 5px 0;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+    line-height: 1.75;
+  }
+
+  .callout b { color: var(--warn); }
+
+  /* ---------- 清單 ---------- */
+  ul.clean {
+    margin: 0 0 16px;
+    padding-left: 17px;
+  }
+
+  ul.clean li {
+    margin-bottom: 7px;
+    line-height: 1.75;
+    font-size: 13px;
+  }
+
+  ul.clean li:last-child { margin-bottom: 0; }
+
+  ul.tight li { margin-bottom: 4px; }
+
+  /* ---------- 頁尾 ---------- */
+  footer.foot {
+    border-top: 1px solid var(--line);
+    padding-top: 15px;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    line-height: 1.7;
+  }
+
+  /* ---------- 列印 ---------- */
+  @media print {
+    @page { size: A4; margin: 14mm 13mm; }
+    body { background: #fff; font-size: 10.5pt; line-height: 1.7; }
+    .sheet { padding: 0; max-width: none; }
+    section.block { margin-bottom: 28px; }
+    .flow, .layer, .decision, .callout, .node, .ps > div {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .no-print { display: none; }
+  }
+
+  /* ---------- 手機 ---------- */
+  @media (max-width: 640px) {
+    .sheet { padding-inline: 18px; padding-block: 32px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16.5px; }
+    .flow-row { flex-direction: column; }
+    .arrow { transform: rotate(90deg); }
+    .block-head { flex-wrap: wrap; }
+    .block-head .tag { margin-left: 0; width: 100%; }
+  }
+
+  .hint {
+    max-width: 800px;
+    margin: 14px auto 0;
+    padding-inline: 56px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 640px) { .hint { padding-inline: 18px; } }
+</style>
+
+<div class="sheet">
+
+  <header class="masthead">
+    <h1>前端工程實作紀錄</h1>
+    <p class="sub">Skill 體系建置 · 瀏覽器擴充套件架構 · 工作流程自動化</p>
+  </header>
+
+  <!-- ══════════════ 01 ══════════════ -->
+  <section class="block">
+    <div class="block-head">
+      <span class="num">01</span>
+      <h2>Skill 體系建置</h2>
+      <span class="tag">方法論 · 品質機制</span>
+    </div>
+
+    <div class="ps">
+      <div>
+        <span class="h">問題</span>
+        <ul>
+          <li>十餘個前端專案，技術棧從傳統多頁應用到現代 SSR 框架</li>
+          <li>跨專案開發最大成本不是寫程式，是搞懂「這件事在這專案怎麼做」</li>
+          <li>AI agent 在不熟的專案裡給出的答案不能直接用</li>
+        </ul>
+      </div>
+      <div class="solve">
+        <span class="h">做了什麼</span>
+        <ul>
+          <li>建立可被 AI agent 自動載入的 Skill 體系</li>
+          <li>定義團隊產出 Skill 的五支標準流程</li>
+          <li>設計出題驗收機制，確保 Skill 真的能帶讀者找到答案</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>體系分層</h3>
+
+    <div class="layers">
+      <div class="layer">
+        <span class="own">平台既有</span>
+        <span class="lt">執行環境層</span>
+        <span class="ld">決定何時載入哪支 Skill。不可修改，只能配合其限制設計。</span>
+      </div>
+      <div class="layer mine">
+        <span class="own">我主導</span>
+        <span class="lt">流程層 — 五支標準作業流程</span>
+        <span class="ld">規範「怎麼產出一支 Skill」。輸入研究題目，輸出通過驗收的 Skill。</span>
+      </div>
+      <div class="layer mine">
+        <span class="own">我參與</span>
+        <span class="lt">內容層 — 各專案與跨專案主題 Skill</span>
+        <span class="ld">其中多支由其他同事依上述流程產出。</span>
+      </div>
+    </div>
+
+    <p style="font-size:12.5px;color:var(--ink-soft);">
+      我的主要價值不在寫了幾支 Skill，而在<b>定義別人怎麼寫</b>。體系中有數支完全由他人產出，正是流程可被沿用的證明。
+    </p>
+
+    <h3>五支流程各司其職</h3>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="node strong"><span class="t">建立</span><span class="d">從零研究新主題</span></div>
+        <span class="arrow">→</span>
+        <div class="node"><span class="t">更新</span><span class="d">局部補寫</span></div>
+        <span class="arrow">→</span>
+        <div class="node"><span class="t">重整</span><span class="d">只動結構</span></div>
+        <span class="arrow">→</span>
+        <div class="node"><span class="t">去重</span><span class="d">跨文件收斂</span></div>
+        <span class="arrow">→</span>
+        <div class="node strong"><span class="t">驗收</span><span class="d">出題回歸測試</span></div>
+      </div>
+      <p class="flow-note">拆成五支而非一支，因為維護型改動與從零建置的風險完全不同</p>
+    </div>
+
+    <ul class="clean tight">
+      <li>早期只有「建立」一支，每次小修正都得整份重寫，順手改錯的機率高</li>
+      <li>拆開後「更新」只准動指定段落，把風險限制在必要範圍</li>
+      <li>「建立」流程中設兩道檢查點，必須由人確認才往下，避免方向錯了還一路做到底</li>
+    </ul>
+
+  </section>
+
+  <!-- ══════════════ 02 ══════════════ -->
+  <section class="block">
+    <div class="block-head">
+      <span class="num">02</span>
+      <h2>Chrome 擴充套件：在別人的網站上呈現自家內容</h2>
+      <span class="tag">Vue 3 · Manifest V3</span>
+    </div>
+
+    <div class="ps">
+      <div>
+        <span class="h">問題</span>
+        <ul>
+          <li>業務人員在外部平台看物件時，想知道自家資料庫有沒有相關資訊</li>
+          <li>得另開分頁、複製地址、手動搜尋，來回切換又容易漏</li>
+        </ul>
+      </div>
+      <div class="solve">
+        <span class="h">這個套件做什麼</span>
+        <ul>
+          <li>偵測使用者正在看哪個物件頁，自動比對自家資料庫</li>
+          <li>在瀏覽器側邊欄即時呈現結果，與對方頁面並排</li>
+          <li>登入沿用自家網站帳號，不需另建帳號系統</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>整體流程</h3>
+
+    <div class="vflow">
+
+      <div class="stage">
+        <div class="rail"><span class="actor usr">使用者</span></div>
+        <div class="box user">
+          <span class="bt">在外部平台瀏覽物件頁</span>
+          <span class="bd">切換分頁、換頁或重新整理</span>
+        </div>
+      </div>
+      <div class="vlink">↓<b>瀏覽器事件通知</b></div>
+
+      <div class="stage">
+        <div class="rail"><span class="actor">背景服務</span></div>
+        <div class="box">
+          <span class="bt">判斷目前網址是否為支援的物件頁</span>
+          <span class="bd">不支援則顯示說明畫面，流程結束</span>
+        </div>
+      </div>
+      <div class="vlink">↓</div>
+
+      <div class="stage">
+        <div class="rail"><span class="actor">背景服務</span></div>
+        <div class="box">
+          <span class="bt">檢查登入狀態</span>
+          <span class="bd">讀取自家網站 Cookie ——瀏覽器開放套件讀取其權限範圍內的 Cookie</span>
+        </div>
+      </div>
+
+      <div class="branch">
+        <div class="no">
+          <span class="cond">未登入</span>
+          <span class="txt">導向自家網站登入頁，走完既有流程即可，不需在套件裡另登一次</span>
+        </div>
+        <div>
+          <span class="cond">已登入</span>
+          <span class="txt">帶著 Cookie 向自家換發存取憑證，存入套件儲存空間</span>
+        </div>
+      </div>
+      <div class="vlink">↓</div>
+
+      <div class="stage">
+        <div class="rail"><span class="actor">背景服務</span></div>
+        <div class="box">
+          <span class="bt">呼叫自家 API 比對資料</span>
+          <span class="bd">由背景服務發出請求：它擁有套件宣告的跨網域權限，不受所在頁面的同源限制</span>
+        </div>
+      </div>
+      <div class="vlink">↓<b>寫入套件儲存空間</b></div>
+
+      <div class="stage">
+        <div class="rail"><span class="actor">側邊欄</span></div>
+        <div class="box">
+          <span class="bt">讀取並呈現比對結果</span>
+          <span class="bd">由瀏覽器提供的獨立區域，與對方頁面並排；不屬於對方網頁，因此不受其封鎖或樣式影響</span>
+        </div>
+      </div>
+      <div class="vlink">↓<b>使用者觸發動作時</b></div>
+
+      <div class="stage">
+        <div class="rail"><span class="actor">側邊欄</span></div>
+        <div class="box">
+          <span class="bt">以訊息機制把請求送回背景服務</span>
+          <span class="bd">畫面層不直接對外要資料，一律經由背景服務；監聽器須明確宣告非同步回覆，否則通道會在結果回來前關閉</span>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>設計取捨</h3>
+
+    <div class="decision">
+      <p class="dq">為什麼從「注入對方頁面」改成「並排側邊欄」？</p>
+      <p>
+        原本把介面注入對方頁面，視覺上能融入對方版面，但對方偵測得到也擋得掉——後來確實被封鎖了。改用瀏覽器提供的側邊欄後，介面不再屬於對方網頁，對方碰不到；代價是無法與對方版面融合。<b>改變呈現載體，而非在被封鎖的路徑上繞過。</b>
+      </p>
+    </div>
+
+  </section>
+
+  <!-- ══════════════ 03 ══════════════ -->
+  <section class="block">
+    <div class="block-head">
+      <span class="num">03</span>
+      <h2>週報自動化工具</h2>
+      <span class="tag">Python · 排程 · AI 協作</span>
+    </div>
+
+    <div class="ps">
+      <div>
+        <span class="h">問題</span>
+        <ul>
+          <li>每週回想「上週做了什麼」花時間又容易漏</li>
+          <li>資料其實都在版本控制系統裡，只是散在各專案</li>
+        </ul>
+      </div>
+      <div class="solve">
+        <span class="h">這支工具做什麼</span>
+        <ul>
+          <li>每週一定時自動撈上週的 PR 與推分支紀錄</li>
+          <li>整理成週報草稿：去重、推測狀態、翻成白話</li>
+          <li>停下等我確認與補充，回「送出」才貼到當週同步議題</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="node">
+          <span class="who">程式</span>
+          <span class="t">撈取活動</span><span class="d">上週 PR 與推分支</span>
+        </div>
+        <span class="arrow">→</span>
+        <div class="node strong">
+          <span class="who">AI</span>
+          <span class="t">整理草稿</span><span class="d">去重、推測狀態、白話化</span>
+        </div>
+        <span class="arrow">→</span>
+        <div class="node flag">
+          <span class="who">人</span>
+          <span class="t">停下確認</span><span class="d">核對並補「本週」</span>
+        </div>
+        <span class="arrow">→</span>
+        <div class="node">
+          <span class="who">程式</span>
+          <span class="t">送出</span><span class="d">貼到當週議題</span>
+        </div>
+      </div>
+      <p class="flow-note">確定性的工作交給程式，需要判斷的交給 AI，有代價的動作交給人</p>
+    </div>
+
+  </section>
+
+  <footer class="foot">
+    本文件內容已去識別化：不含產品名稱、網域、API 路徑與業務規則，僅保留架構設計與技術決策。
+  </footer>
+
+</div>
+
+<p class="hint no-print">列印或另存 PDF：按 ⌘P（Windows 為 Ctrl+P），版面已針對 A4 調整。</p>
