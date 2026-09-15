@@ -154,6 +154,24 @@ export const speaking = {
   link: 'https://vuejs.kktix.cc/',
 }
 
+export const works = [
+  {
+    title: '前端工程實作紀錄',
+    note: 'Skill 體系建置 · Chrome 擴充套件架構 · 工作流程自動化',
+    href: '/profile',
+  },
+  {
+    title: 'Chrome Extension × Vue',
+    note: '簡報',
+    href: '/slides/0330-ext-vue',
+  },
+  {
+    title: 'Vue.js Taiwan · Slidev',
+    note: '簡報',
+    href: '/slides/1025-vue-tw-slidev',
+  },
+]
+
 export const education = {
   school: '大同大學',
   detail: '媒體設計學系互動媒體組 · 2019',

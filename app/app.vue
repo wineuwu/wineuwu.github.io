@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { header, summary, skills, experiences, speaking, education, seo, renderBold } from '@/data/cv'
+import { header, summary, skills, experiences, speaking, works, education, seo, renderBold } from '@/data/cv'
 
 useHead({ htmlAttrs: { lang: 'zh-Hant-TW' } })
 
@@ -118,6 +118,20 @@ useSeoMeta({
         >{{ speaking.event }}</a>
         <span class="text-neutral-600">｜{{ speaking.topic }}</span>
       </p>
+    </section>
+
+    <!-- Works & Talks -->
+    <section class="mt-14">
+      <h2 class="text-2xl font-semibold tracking-tight">Works &amp; Talks</h2>
+      <ul class="mt-5 space-y-3">
+        <li v-for="work in works" :key="work.href">
+          <a
+            :href="work.href"
+            class="text-base font-medium text-neutral-800 underline underline-offset-2 hover:text-neutral-600"
+          >{{ work.title }}</a>
+          <span class="text-base text-neutral-600">｜{{ work.note }}</span>
+        </li>
+      </ul>
     </section>
 
     <!-- Education -->
